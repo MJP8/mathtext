@@ -1,2 +1,6 @@
-var test = 123.456
-write test
+var var1 = 123.456789
+write var1
+var var2 = 1 + 1
+write var2
+var var3 = 78.8 / 8
+write var3

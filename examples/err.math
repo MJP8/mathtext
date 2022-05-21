@@ -1,0 +1,6 @@
+write true
+write false
+write 16 / 4
+var test = 1.003
+write error
+write 3456 * 15

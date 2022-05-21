@@ -54,7 +54,7 @@ int interpret(char filename[]) {
 		return 0;
 	}
 }
-int calculate(int num1, int num2, char operator) {
+double calculate(double num1, double num2, char operator) {
 	switch (operator) {
 		case '+':
 			return num1 + num2;
@@ -65,23 +65,22 @@ int calculate(int num1, int num2, char operator) {
 		case '/':
 			return num1 / num2;
 		default:
-			return -400;
+			return -400.0;
 	}
 }
 int process(char *text) {
-	int num1, num2, num3, num4;
+	double d1, d2, d3, d4;
 	char op1, op2, op3;
-	double d1;
 	char string[20];
-	if (sscanf(text, "write %d %c %d", &num1, &op1, &num2) == 3) {
-		int answer = calculate(num1, num2, op1);
-		if (answer != -400) {
-			printf("%d", answer);
+	if (sscanf(text, "write %lf %c %lf", &d1, &op1, &d2) == 3) {
+		double answer = calculate(d1, d2, op1);
+		if (answer != -400.0) {
+			printf("%lf", answer);
 		} else {
 			return 0;
 		}
-	} else if (sscanf(text, "write %d", &num1) == 1) {
-		printf("%d", num1);
+	} else if (sscanf(text, "write %lf", &d1) == 1) {
+		printf("%lf", d1);
 	} else if (sscanf(text, "write %s", string)) {
 		if (strcmp(string, "true") == 0 || strcmp(string, "false") == 0) {
 			printf("%s", string);
@@ -90,7 +89,15 @@ int process(char *text) {
 		} else {
 			return 0;
 		}
-	} else if (sscanf(text, "var %s = %lf", string, &d1)) {
+	} else if (sscanf(text, "var %s = %lf %c %lf", string, &d1, &op1, &d2) == 4) {
+		double answer = calculate(d1, d2, op1);
+		if (answer != -400.0) {
+			setvar(string, answer);
+			printf("variable %s: floating point value", string);
+		} else {
+			return 0;
+		}
+	} else if (sscanf(text, "var %s = %lf", string, &d1) == 2) {
 		setvar(string, d1);
 		printf("variable %s: floating point value", string);
 	} else {
