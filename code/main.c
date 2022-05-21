@@ -14,9 +14,28 @@ int interpret(char filename[]);
 void setvar(char name[], double value);
 double getvar(char name[]);
 int main(int argc, char *argv[]) {
-	char filename[255];
-	sscanf(argv[1], "%s", filename);
-	interpret(filename);
+	if (argc == 2) {
+		char filename[255];
+		sscanf(argv[1], "%s", filename);
+		interpret(filename);
+	} else if (argc == 1) {
+		printf("MathText\n> ");
+		char line[255];
+		while (1) {
+			fgets(line, 255, stdin);
+			if (strncmp(line, "help", 4) == 0) {
+				printf("See https://github.com/MJP8/mathtext for a documentation on MathText.\nType \"help\" to open this help.\nType \"exit\" to close.\n");
+			} else if (strncmp(line, "exit", 4) == 0) {
+				return 0;
+			} else {
+				if (!process(line)) {
+					printf("Error\n");
+				}
+			}
+			printf("> ");
+		}
+	}
+	
 }
 int interpret(char filename[]) {
 	FILE *file;
