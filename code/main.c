@@ -90,7 +90,7 @@ double calculate(double num1, double num2, char operator) {
 int process(char *text) {
 	double d1, d2, d3, d4;
 	char op1, op2, op3;
-	char string[20];
+	char string[20], string2[20], string3[20];
 	if (sscanf(text, "write %lf %c %lf", &d1, &op1, &d2) == 3) {
 		double answer = calculate(d1, d2, op1);
 		if (answer != -400.0) {
@@ -100,11 +100,24 @@ int process(char *text) {
 		}
 	} else if (sscanf(text, "write %lf", &d1) == 1) {
 		printf("%lf", d1);
-	} else if (sscanf(text, "write %s", string)) {
+	} else if (sscanf(text, "write %s %c %s", string, &op1, string2) == 3) {
+		d1 = getvar(string);
+		d2 = getvar(string2);
+		if (d1 && d2) {
+			double answer = calculate(d1, d2, op1);
+			if (answer != -400.0) {
+				printf("%lf", answer);
+			} else {
+				return 0;
+			}
+		} else {
+			return 0;
+		}
+	} else if (sscanf(text, "write %s", string) == 1) {
 		if (strcmp(string, "true") == 0 || strcmp(string, "false") == 0) {
 			printf("%s", string);
 		} else if (getvar(string)) {
-			printf("%f", getvar(string));
+			printf("%lf", getvar(string));
 		} else {
 			return 0;
 		}
@@ -119,7 +132,22 @@ int process(char *text) {
 	} else if (sscanf(text, "var %s = %lf", string, &d1) == 2) {
 		setvar(string, d1);
 		printf("variable %s: floating point value", string);
+	} else if (sscanf(text, "var %s = %s %c %s", string, string2, &op1, string3)) {
+		d1 = getvar(string2);
+		d2 = getvar(string3);
+		if (d1 && d2) {
+			double answer = calculate(d1, d2, op1);
+			if (answer != -400.0) {
+				setvar(string, answer);
+				printf("variable %s: floating point value", string);
+			} else {
+				return 0;
+			}
+		} else {
+			return 0;
+		}
 	} else {
+		printf("test");
 		return 0;
 	}
 	printf("\n");
@@ -154,12 +182,3 @@ double getvar(char name[]) {
 	}
 	return 0.0;
 }
-// void main(void) {
-// 	setvar("test", 1.0);
-// 	setvar("test2", 123.456789);
-// 	setvar("test3", 4.5);
-// 	// printf("%d\n", rootvar->value);
-// 	printf("test: %f\n", getvar("test"));
-// 	printf("test2: %f\n", getvar("test2"));
-// 	printf("test3: %f\n", getvar("test3"));
-// }
